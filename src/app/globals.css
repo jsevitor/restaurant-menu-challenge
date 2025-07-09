@@ -20,3 +20,9 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+@media screen and (max-width: 1024px) {
+  body {
+    background: var(--bg-secondary);
+  }
+}
