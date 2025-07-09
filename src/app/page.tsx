@@ -1,7 +1,9 @@
+import MenuCategories from "./components/MenuCategories";
+
 export default function Home() {
   return (
-    <div>
-      <h1>Home</h1>
+    <div className="lg:p-8 bg-bg-secondary lg:bg-bg-primary">
+      <MenuCategories />
     </div>
   );
 }
