@@ -20,7 +20,7 @@ export default function MenuCategories() {
 
   return (
     <div
-      className="flex flex-col px-4"
+      className="flex flex-col px-4 lg:w-2/3 shadow-md"
       style={{ backgroundColor: venue?.webSettings.backgroundColour }}
     >
       <section className="flex justify-center lg:justify-start lg:gap-4">
