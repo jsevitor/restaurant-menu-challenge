@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./components/Header";
+import Searchbar from "./components/Searchbar";
 
 export const metadata: Metadata = {
   title: "Restaurant Menu Challenge",
@@ -14,9 +15,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`container mx-auto antialiased`}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+        />
+      </head>
+      <body className={`antialiased`}>
         <Header />
-        {children}
+        <main className="w-full lg:w-small mx-auto flex flex-col gap-4 p-4 lg:px-0 lg:py-4">
+          <Searchbar />
+          {children}
+        </main>
       </body>
     </html>
   );

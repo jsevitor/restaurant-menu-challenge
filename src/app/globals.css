@@ -5,6 +5,7 @@
   --foreground: #121212;
   --bg-primary: #f8f9fa;
   --bg-secondary: #ffffff;
+  --small-ct: 1024px;
 }
 
 @theme inline {
@@ -12,6 +13,7 @@
   --color-foreground: var(--foreground);
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
+  --container-small: var(--small-ct);
 }
 
 body {
