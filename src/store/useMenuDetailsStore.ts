@@ -1,51 +1,6 @@
 import { create } from "zustand";
+import { Menu } from "@/types/types";
 import localMenuData from "@/data/data.json";
-
-type MenuItemImage = {
-  id: number;
-  image: string;
-};
-
-type ModifierItem = {
-  id: number;
-  name: string;
-  price: number;
-  available: boolean;
-};
-
-type MenuItem = {
-  id: number;
-  name: string;
-  description?: string;
-  alcoholic: number;
-  price: number;
-  position: number;
-  visible: number;
-  images: MenuItemImage[];
-  available: boolean;
-  modifiers?: {
-    id: number;
-    name: string;
-    minChoices: number;
-    maxChoices: number;
-    items: ModifierItem[];
-  }[];
-};
-
-type MenuSection = {
-  id: number;
-  name: string;
-  images: MenuItemImage[];
-  items: MenuItem[];
-  position: number;
-  visible: number;
-};
-
-type Menu = {
-  id: number;
-  name: string;
-  sections: MenuSection[];
-};
 
 type MenuStore = {
   menu: Menu | null;
@@ -59,7 +14,7 @@ export const useMenuDetailsStore = create<MenuStore>((set) => ({
   fetchMenu: async () => {
     set({ isLoading: true });
     try {
-      set({ menu: localMenuData });
+      set({ menu: localMenuData as unknown as Menu });
     } catch (err) {
       console.error("Erro ao carregar o menu local:", err);
     } finally {

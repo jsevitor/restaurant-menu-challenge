@@ -20,9 +20,7 @@ export default function MenuCategories() {
   useEffect(() => {
     fetchVenue();
     fetchMenu();
-  }, []);
-
-  const cartItem = items.find((i) => i.id === items[0].id);
+  }, [fetchVenue, fetchMenu]);
 
   return (
     <div
@@ -89,7 +87,7 @@ export default function MenuCategories() {
                     <span className="flex gap-2">
                       {(() => {
                         const cartItem = items.find((i) => i.id === item.id);
-                        return cartItem?.quantity > 0 ? (
+                        return cartItem && cartItem.quantity > 0 ? (
                           <span
                             className="px-2 text-bg-primary text-xs rounded flex items-center justify-center font-semibold"
                             style={{
@@ -110,7 +108,7 @@ export default function MenuCategories() {
                       <span>{formatCurrency(item.price)} </span>
                     </p>
                   </div>
-                  {item.images?.length > 0 && (
+                  {item.images && item.images.length > 0 && (
                     <div className="w-[128px] h-[85px] rounded overflow-hidden">
                       <Image
                         src={item.images[0].image}

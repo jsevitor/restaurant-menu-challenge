@@ -4,7 +4,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { useVenueStore } from "@/store/useVenueStore";
 import { MenuItem } from "@/types/types";
 import { formatCurrency, getFinalPrice } from "@/utils/function";
-import { mapMenuItemToCartItem } from "@/utils/mapping";
+import { mapMenuItemToCartItem } from "@/utils/function";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
@@ -19,7 +19,6 @@ type ModalProps = {
 export default function Modal({ isOpen, onClose, item }: ModalProps) {
   const { venue, fetchVenue } = useVenueStore();
   const { addItem } = useCartStore();
-  const [selectedModifier, setSelectedModifier] = useState<number | null>(null);
   const [selectedModifiers, setSelectedModifiers] = useState<
     Record<number, number>
   >({});
@@ -29,7 +28,7 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
   useEffect(() => {
     ReactModal.setAppElement(document.body);
     fetchVenue();
-  }, []);
+  }, [fetchVenue]);
 
   if (!item) return null;
 
@@ -41,7 +40,6 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
       onRequestClose={() => {
         onClose();
         setQuantity(1);
-        setSelectedModifier(null);
         setSelectedModifiers({});
       }}
       overlayClassName="fixed inset-0 bg-[#0f0f0f80] flex items-center justify-center"
@@ -51,7 +49,7 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
       <div className="flex flex-col relative h-full">
         <div className="flex-1 overflow-y-auto">
           <div className="relative w-full h-[320px]">
-            {item.images?.length > 0 && (
+            {item.images && item.images?.length > 0 && (
               <div className="w-[128px] h-[85px] rounded overflow-hidden">
                 <Image
                   src={item.images[0].image}
@@ -64,7 +62,6 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
                   onClick={() => {
                     onClose();
                     setQuantity(1);
-                    setSelectedModifier(null);
                   }}
                 >
                   <i className="bi bi-x-lg"></i>
@@ -140,7 +137,6 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
               addItem(cartItem);
               onClose();
               setQuantity(1);
-              setSelectedModifier(null);
               setSelectedModifiers({});
             }}
           >

@@ -24,12 +24,33 @@ export type MenuItem = {
   price: number;
   position: number;
   visible: number;
-  availabilityType: string;
-  sku: string;
-  available: boolean;
+  availabilityType?: string;
+  sku?: string;
+  available?: boolean;
   images?: {
     id: number;
     image: string;
   }[];
   modifiers?: Modifier[];
+};
+
+type MenuItemImage = {
+  id: number;
+  image: string;
+};
+
+export type MenuSection = {
+  id: number;
+  name: string;
+  description: string | null;
+  position: number;
+  visible: number;
+  images: MenuItemImage[];
+  items: MenuItem[];
+};
+
+export type Menu = {
+  id: number;
+  name: string;
+  sections: MenuSection[];
 };

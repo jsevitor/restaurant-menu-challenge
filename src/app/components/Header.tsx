@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Header() {
-  const { venue, isLoading, fetchVenue } = useVenueStore();
+  const { venue, fetchVenue } = useVenueStore();
   const [selectedTab, setSelectedTab] = useState("menu");
 
   const options = [
@@ -16,7 +16,7 @@ export default function Header() {
 
   useEffect(() => {
     fetchVenue();
-  }, []);
+  }, [fetchVenue]);
 
   const navColor = useVenueStore(
     (s) => s.venue?.webSettings.navBackgroundColour
