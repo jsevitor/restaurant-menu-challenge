@@ -4,19 +4,20 @@ import { useMenuDetailsStore } from "@/store/useMenuDetailsStore";
 import { useVenueStore } from "@/store/useVenueStore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import Modal from "./Modal";
+import { MenuItem } from "@/types/types";
 
 export default function MenuCategories() {
   const { venue, fetchVenue } = useVenueStore();
   const { menu, fetchMenu } = useMenuDetailsStore();
   const [selectedCategory, setSelectedCategory] = useState("Burgers");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
   useEffect(() => {
     fetchVenue();
     fetchMenu();
   }, []);
-
-  console.log(menu?.sections[0].images[0].image);
-  let image = menu?.sections[0].images[0].image;
 
   return (
     <div
@@ -70,33 +71,51 @@ export default function MenuCategories() {
               ></i>
             </div>
             {section.items.map((item) => (
-              <div key={item.id} className="py-4 flex justify-between gap-4">
-                <div className="overflow-ellipsis w-3/4">
-                  <h3 className="font-semibold">{item.name}</h3>
-                  <p className="line-clamp-1 text-sm text-gray-700">
-                    {item.description}
-                  </p>
-                  <p className="font-semibold">
-                    <span>{venue?.currency}</span>
-                    <span>{item.price} </span>
-                  </p>
-                </div>
-                {item.images?.length > 0 && (
-                  <div className="w-[128px] h-[85px] rounded overflow-hidden">
-                    <Image
-                      src={item.images[0].image}
-                      alt={item.name}
-                      width={128}
-                      height={85}
-                      className="object-cover w-full h-full"
-                    />
+              <button
+                key={item.id}
+                className="flex flex-col w-full text-left cursor-pointer"
+                onClick={() => {
+                  setIsOpen(true);
+                  setSelectedItem(item);
+                  console.log(item);
+                }}
+              >
+                <div key={item.id} className="py-4 flex justify-between gap-4">
+                  <div className="overflow-ellipsis w-3/4">
+                    <h3 className="font-semibold">{item.name}</h3>
+                    <p className="line-clamp-1 text-sm text-gray-700">
+                      {item.description}
+                    </p>
+                    <p className="font-semibold">
+                      <span>{venue?.currency}</span>
+                      <span>{item.price} </span>
+                    </p>
                   </div>
-                )}
-              </div>
+                  {item.images?.length > 0 && (
+                    <div className="w-[128px] h-[85px] rounded overflow-hidden">
+                      <Image
+                        src={item.images[0].image}
+                        alt={item.name}
+                        width={128}
+                        height={85}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  )}
+                </div>
+              </button>
             ))}
           </div>
         ))}
       </section>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          setSelectedItem(null);
+        }}
+        item={selectedItem}
+      />
     </div>
   );
 }

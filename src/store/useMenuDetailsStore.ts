@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import localMenuData from "@/data/data.json";
 
 type MenuItemImage = {
   id: number;
@@ -58,11 +59,10 @@ export const useMenuDetailsStore = create<MenuStore>((set) => ({
   fetchMenu: async () => {
     set({ isLoading: true });
     try {
-      const res = await fetch("api/menu");
-      const data = await res.json();
-      set({ menu: data });
+      // Aqui você usa o JSON local diretamente
+      set({ menu: localMenuData });
     } catch (err) {
-      console.error("Erro ao buscar menu: ", err);
+      console.error("Erro ao carregar o menu local:", err);
     } finally {
       set({ isLoading: false });
     }
