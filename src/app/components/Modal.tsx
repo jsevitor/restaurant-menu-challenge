@@ -8,6 +8,7 @@ import { mapMenuItemToCartItem } from "@/utils/function";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
+import { GeneralButton } from "./Buttons";
 
 type ModalProps = {
   isOpen: boolean;
@@ -42,8 +43,8 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
         setQuantity(1);
         setSelectedModifiers({});
       }}
-      overlayClassName="fixed inset-0 bg-[#0f0f0f80] flex items-center justify-center"
-      className="bg-bg-secondary rounded shadow-lg w-[480px] h-5/6 max-w-lg mx-4 text-sm xl:max-h-[720px] overflow-y-auto overflow-x-hidden"
+      overlayClassName="fixed inset-0 bg-[#0f0f0f80] flex items-center justify-center z-80"
+      className="bg-bg-secondary lg:rounded shadow-lg w-full h-full max-w-lg mx-auto text-sm xl:max-h-[720px] overflow-y-auto overflow-x-hidden lg:w-[480px] lg:h-5/6"
       contentLabel="Modal"
     >
       <div className="flex flex-col relative h-full">
@@ -125,10 +126,8 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
               <i className="bi bi-plus-lg"></i>
             </button>
           </div>
-          <button
-            className="p-3 w-full rounded-full text-bg-primary cursor-pointer font-semibold"
-            style={{ backgroundColor: venue?.webSettings.primaryColour }}
-            onClick={() => {
+          <GeneralButton
+            action={() => {
               const cartItem = mapMenuItemToCartItem(
                 item,
                 quantity,
@@ -139,9 +138,10 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
               setQuantity(1);
               setSelectedModifiers({});
             }}
+            venue={venue}
           >
             Add to Order - {formatCurrency(finalPrice)}
-          </button>
+          </GeneralButton>
         </div>
       </div>
     </ReactModal>
