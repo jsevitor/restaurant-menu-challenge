@@ -83,7 +83,7 @@ export default function Cart() {
           </div>
         </div>
       ) : (
-        <p className="p-6 bg-bg-secondary">Seu carrinho está vazio</p>
+        <p className="p-6 bg-bg-secondary">Your basket is empty</p>
       )}
     </section>
   );

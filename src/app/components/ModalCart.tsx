@@ -3,7 +3,7 @@
 import { useCartStore } from "@/store/useCartStore";
 import { useVenueStore } from "@/store/useVenueStore";
 import { formatCurrency } from "@/utils/function";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ReactModal from "react-modal";
 import { GeneralButton } from "./Buttons";
 
@@ -17,7 +17,6 @@ export default function ModalCart({ isOpen, onClose }: ModalProps) {
   const { venue, fetchVenue } = useVenueStore();
   const { items, total, removeItem, changeQuantity, clearCart } =
     useCartStore();
-  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     ReactModal.setAppElement(document.body);
@@ -29,7 +28,6 @@ export default function ModalCart({ isOpen, onClose }: ModalProps) {
       isOpen={isOpen}
       onRequestClose={() => {
         onClose();
-        setQuantity(1);
       }}
       overlayClassName="fixed inset-0 bg-[#0f0f0f80] flex items-center justify-center z-80"
       className="bg-bg-secondary lg:rounded shadow-lg w-full h-full max-w-lg mx-auto text-sm overflow-hidden lg:hidden"
@@ -121,9 +119,11 @@ export default function ModalCart({ isOpen, onClose }: ModalProps) {
                 <span>{formatCurrency(total)}</span>
               </div>
               <div className="p-4">
-                <GeneralButton action={onClose} venue={venue}>
-                  Checkout now
-                </GeneralButton>
+                {venue && (
+                  <GeneralButton action={onClose} venue={venue}>
+                    Checkout now
+                  </GeneralButton>
+                )}
               </div>
             </div>
           </>

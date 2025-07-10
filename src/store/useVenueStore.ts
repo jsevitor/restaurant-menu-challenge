@@ -1,17 +1,5 @@
+import { Venue } from "@/types/types";
 import { create } from "zustand";
-
-type Venue = {
-  id: number;
-  name: string;
-  webSettings: {
-    bannerImage: string;
-    backgroundColour: string;
-    primaryColour: string;
-    primaryColourHover: string;
-    navBackgroundColour: string;
-  };
-  currency: string;
-};
 
 type VenueStore = {
   venue: Venue | null;

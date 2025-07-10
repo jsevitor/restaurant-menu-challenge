@@ -9,18 +9,44 @@ import { MenuItem } from "@/types/types";
 import { useCartStore } from "@/store/useCartStore";
 import { formatCurrency } from "@/utils/function";
 
-export default function MenuCategories() {
+type Props = {
+  searchTerm: string;
+};
+
+export default function MenuCategories({ searchTerm }: Props) {
   const { venue, fetchVenue } = useVenueStore();
   const { menu, fetchMenu } = useMenuDetailsStore();
   const { items } = useCartStore();
   const [selectedCategory, setSelectedCategory] = useState("Burgers");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [orderedSections, setOrderedSections] = useState(menu?.sections || []);
 
   useEffect(() => {
     fetchVenue();
     fetchMenu();
   }, [fetchVenue, fetchMenu]);
+
+  useEffect(() => {
+    if (menu?.sections) {
+      setOrderedSections(menu.sections);
+    }
+  }, [menu]);
+
+  const handleCategoryClick = (categoryName: string) => {
+    setSelectedCategory(categoryName);
+    if (!menu?.sections) return;
+
+    const newOrder = [...menu.sections];
+    const clickedSectionIndex = newOrder.findIndex(
+      (s) => s.name === categoryName
+    );
+    if (clickedSectionIndex > -1) {
+      const [clickedSection] = newOrder.splice(clickedSectionIndex, 1);
+      newOrder.unshift(clickedSection);
+      setOrderedSections(newOrder);
+    }
+  };
 
   return (
     <div
@@ -35,7 +61,10 @@ export default function MenuCategories() {
               selectedCategory === section.name ? "border-b-3" : ""
             }`}
             style={{ borderColor: venue?.webSettings.primaryColour }}
-            onClick={() => setSelectedCategory(section.name)}
+            onClick={() => {
+              setSelectedCategory(section.name);
+              handleCategoryClick(section.name);
+            }}
           >
             <div
               className={`relative  w-[82px] h-[82px] rounded-full ${
@@ -60,70 +89,75 @@ export default function MenuCategories() {
           </button>
         ))}
       </section>
-      <section className="mt-8">
-        {menu?.sections.map((section) => (
-          <div key={section.id}>
-            <div className="flex justify-between py-4">
-              <h2 className="text-xl font-semibold">{section.name}</h2>
-              <i
-                className={`bi text-xl ${
-                  selectedCategory === section.name
-                    ? "bi-chevron-up"
-                    : "bi-chevron-down"
-                }`}
-              ></i>
-            </div>
-            {section.items.map((item) => (
-              <button
-                key={item.id}
-                className="flex flex-col w-full text-left cursor-pointer"
-                onClick={() => {
-                  setIsOpen(true);
-                  setSelectedItem(item);
-                }}
-              >
-                <div key={item.id} className="py-4 flex justify-between gap-4">
-                  <div className="overflow-ellipsis w-3/4">
-                    <span className="flex gap-2">
-                      {(() => {
-                        const cartItem = items.find((i) => i.id === item.id);
-                        return cartItem && cartItem.quantity > 0 ? (
-                          <span
-                            className="px-2 text-bg-primary text-xs rounded flex items-center justify-center font-semibold"
-                            style={{
-                              backgroundColor: venue?.webSettings.primaryColour,
-                            }}
-                          >
-                            {cartItem.quantity}
-                          </span>
-                        ) : null;
-                      })()}
 
-                      <h3 className="font-semibold">{item.name}</h3>
-                    </span>
-                    <p className="line-clamp-1 text-sm text-gray-700">
-                      {item.description}
-                    </p>
-                    <p className="font-semibold">
-                      <span>{formatCurrency(item.price)} </span>
-                    </p>
-                  </div>
-                  {item.images && item.images.length > 0 && (
-                    <div className="w-[128px] h-[85px] rounded overflow-hidden">
-                      <Image
-                        src={item.images[0].image}
-                        alt={item.name}
-                        width={128}
-                        height={85}
-                        className="object-cover w-full h-full"
-                      />
+      {/* Itens das categorias */}
+      <section className="mt-8">
+        {orderedSections.map((section) => {
+          const filteredItems = section.items.filter((item) =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+
+          if (filteredItems.length === 0) return null;
+
+          return (
+            <div key={section.id}>
+              <div className="flex justify-between py-4">
+                <h2 className="text-xl font-semibold">{section.name}</h2>
+                <i className="bi bi-chevron-down text-xl"></i>
+              </div>
+              {filteredItems.map((item) => (
+                <button
+                  key={item.id}
+                  className="flex flex-col w-full text-left cursor-pointer"
+                  onClick={() => {
+                    setIsOpen(true);
+                    setSelectedItem(item);
+                  }}
+                >
+                  <div className="py-4 flex justify-between gap-4">
+                    <div className="overflow-ellipsis w-3/4">
+                      <span className="flex gap-2">
+                        {(() => {
+                          const cartItem = items.find((i) => i.id === item.id);
+                          return cartItem && cartItem.quantity > 0 ? (
+                            <span
+                              className="px-2 text-bg-primary text-xs rounded flex items-center justify-center font-semibold"
+                              style={{
+                                backgroundColor:
+                                  venue?.webSettings.primaryColour,
+                              }}
+                            >
+                              {cartItem.quantity}
+                            </span>
+                          ) : null;
+                        })()}
+
+                        <h3 className="font-semibold">{item.name}</h3>
+                      </span>
+                      <p className="line-clamp-1 text-sm text-gray-700">
+                        {item.description}
+                      </p>
+                      <p className="font-semibold">
+                        <span>{formatCurrency(item.price)} </span>
+                      </p>
                     </div>
-                  )}
-                </div>
-              </button>
-            ))}
-          </div>
-        ))}
+                    {item.images && item.images.length > 0 && (
+                      <div className="w-[128px] h-[85px] rounded overflow-hidden">
+                        <Image
+                          src={item.images[0].image}
+                          alt={item.name}
+                          width={128}
+                          height={85}
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          );
+        })}
       </section>
       <Modal
         isOpen={isOpen}

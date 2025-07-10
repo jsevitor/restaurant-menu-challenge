@@ -1,6 +1,8 @@
+import { Venue } from "@/types/types";
+
 type Btn = {
   action?: () => void;
-  venue: any;
+  venue: Venue;
   children: React.ReactNode;
 };
 

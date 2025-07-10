@@ -54,3 +54,16 @@ export type Menu = {
   name: string;
   sections: MenuSection[];
 };
+
+export type Venue = {
+  id: number;
+  name: string;
+  webSettings: {
+    bannerImage: string;
+    backgroundColour: string;
+    primaryColour: string;
+    primaryColourHover: string;
+    navBackgroundColour: string;
+  };
+  currency: string;
+};

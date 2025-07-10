@@ -126,22 +126,24 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
               <i className="bi bi-plus-lg"></i>
             </button>
           </div>
-          <GeneralButton
-            action={() => {
-              const cartItem = mapMenuItemToCartItem(
-                item,
-                quantity,
-                selectedModifiers
-              );
-              addItem(cartItem);
-              onClose();
-              setQuantity(1);
-              setSelectedModifiers({});
-            }}
-            venue={venue}
-          >
-            Add to Order - {formatCurrency(finalPrice)}
-          </GeneralButton>
+          {venue && (
+            <GeneralButton
+              action={() => {
+                const cartItem = mapMenuItemToCartItem(
+                  item,
+                  quantity,
+                  selectedModifiers
+                );
+                addItem(cartItem);
+                onClose();
+                setQuantity(1);
+                setSelectedModifiers({});
+              }}
+              venue={venue}
+            >
+              Add to Order - {formatCurrency(finalPrice)}
+            </GeneralButton>
+          )}
         </div>
       </div>
     </ReactModal>
