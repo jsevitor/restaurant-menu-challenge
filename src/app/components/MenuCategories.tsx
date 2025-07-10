@@ -6,10 +6,13 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { MenuItem } from "@/types/types";
+import { useCartStore } from "@/store/useCartStore";
+import { formatCurrency } from "@/utils/function";
 
 export default function MenuCategories() {
   const { venue, fetchVenue } = useVenueStore();
   const { menu, fetchMenu } = useMenuDetailsStore();
+  const { items } = useCartStore();
   const [selectedCategory, setSelectedCategory] = useState("Burgers");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
@@ -18,6 +21,8 @@ export default function MenuCategories() {
     fetchVenue();
     fetchMenu();
   }, []);
+
+  const cartItem = items.find((i) => i.id === items[0].id);
 
   return (
     <div
@@ -77,18 +82,32 @@ export default function MenuCategories() {
                 onClick={() => {
                   setIsOpen(true);
                   setSelectedItem(item);
-                  console.log(item);
                 }}
               >
                 <div key={item.id} className="py-4 flex justify-between gap-4">
                   <div className="overflow-ellipsis w-3/4">
-                    <h3 className="font-semibold">{item.name}</h3>
+                    <span className="flex gap-2">
+                      {(() => {
+                        const cartItem = items.find((i) => i.id === item.id);
+                        return cartItem?.quantity > 0 ? (
+                          <span
+                            className="px-2 text-bg-primary text-xs rounded flex items-center justify-center font-semibold"
+                            style={{
+                              backgroundColor: venue?.webSettings.primaryColour,
+                            }}
+                          >
+                            {cartItem.quantity}
+                          </span>
+                        ) : null;
+                      })()}
+
+                      <h3 className="font-semibold">{item.name}</h3>
+                    </span>
                     <p className="line-clamp-1 text-sm text-gray-700">
                       {item.description}
                     </p>
                     <p className="font-semibold">
-                      <span>{venue?.currency}</span>
-                      <span>{item.price} </span>
+                      <span>{formatCurrency(item.price)} </span>
                     </p>
                   </div>
                   {item.images?.length > 0 && (

@@ -22,7 +22,7 @@
           "name": "Hard Core",
           "description": "180g angus beef burger, with shredded ribs, gruyere cheese, caramelized onions, lettuce, confit tomato, special house bread, served with fried cassava and passion fruit chipotle.",
           "alcoholic": 0,
-          "price": 33.00,
+          "price": 33.0,
           "position": 0,
           "visible": 1,
           "availabilityType": "AVAILABLE_NOW",
@@ -41,8 +41,20 @@
               "minChoices": 1,
               "maxChoices": 1,
               "items": [
-                { "id": 7476061, "name": "Standard", "price": 33.00, "visible": 1, "available": true },
-                { "id": 7476062, "name": "Double Meat", "price": 36.00, "visible": 1, "available": true }
+                {
+                  "id": 7476061,
+                  "name": "Standard",
+                  "price": 0.0,
+                  "visible": 1,
+                  "available": true
+                },
+                {
+                  "id": 7476062,
+                  "name": "Double Meat",
+                  "price": 6.0,
+                  "visible": 1,
+                  "available": true
+                }
               ]
             }
           ]
@@ -52,7 +64,7 @@
           "name": "Smash Brooks",
           "description": "100g pressed hamburger, mozzarella cheese, pickles, red onion, grilled bacon and traditional Heinz mayonnaise.",
           "alcoholic": 0,
-          "price": 0.00,
+          "price": 33.0,
           "position": 1000,
           "visible": 1,
           "availabilityType": "AVAILABLE_NOW",
@@ -64,9 +76,30 @@
               "minChoices": 1,
               "maxChoices": 1,
               "items": [
-                { "id": 7476054, "name": "1 meat", "price": 33.00, "position": 0, "visible": 1, "available": true },
-                { "id": 7476055, "name": "2 meats", "price": 35.00, "position": 1000, "visible": 1, "available": true },
-                { "id": 7476056, "name": "3 meats", "price": 37.00, "position": 2000, "visible": 1, "available": true }
+                {
+                  "id": 7476054,
+                  "name": "1 meat",
+                  "price": 0.0,
+                  "position": 0,
+                  "visible": 1,
+                  "available": true
+                },
+                {
+                  "id": 7476055,
+                  "name": "2 meats",
+                  "price": 5.0,
+                  "position": 1000,
+                  "visible": 1,
+                  "available": true
+                },
+                {
+                  "id": 7476056,
+                  "name": "3 meats",
+                  "price": 7.0,
+                  "position": 2000,
+                  "visible": 1,
+                  "available": true
+                }
               ]
             }
           ],
@@ -83,7 +116,7 @@
           "name": "Ogro Burger",
           "description": "180g angus beef burger, homemade molasses barbecue with golden bacon cubes, mozzarella cheese and homemade roasted garlic mayonnaise.",
           "alcoholic": 0,
-          "price": 33.00,
+          "price": 33.0,
           "position": 2000,
           "visible": 1,
           "availabilityType": "AVAILABLE_NOW",
@@ -102,8 +135,20 @@
               "minChoices": 1,
               "maxChoices": 1,
               "items": [
-                { "id": 7476063, "name": "Golden Cubes", "price": 0.00, "visible": 1, "available": true },
-                { "id": 7476064, "name": "Crispy Strips", "price": 2.00, "visible": 1, "available": true }
+                {
+                  "id": 7476063,
+                  "name": "Golden Cubes",
+                  "price": 1.0,
+                  "visible": 1,
+                  "available": true
+                },
+                {
+                  "id": 7476064,
+                  "name": "Crispy Strips",
+                  "price": 2.0,
+                  "visible": 1,
+                  "available": true
+                }
               ]
             }
           ]
@@ -127,7 +172,7 @@
           "name": "Caipirinha",
           "description": "Classic Brazilian cocktail made with lime, sugar, and cachaça.",
           "alcoholic": 1,
-          "price": 13.00,
+          "price": 13.0,
           "position": 0,
           "visible": 1,
           "availabilityType": "AVAILABLE_NOW",
@@ -145,7 +190,7 @@
           "name": "Red Label",
           "description": "Johnnie Walker Red Label Scotch Whisky.",
           "alcoholic": 1,
-          "price": 13.00,
+          "price": 13.0,
           "position": 1000,
           "availabilityType": "AVAILABLE_NOW",
           "sku": "I1004123",
@@ -162,7 +207,7 @@
           "name": "Smirnoff",
           "description": "Classic vodka shot or mixed drink base.",
           "alcoholic": 1,
-          "price": 10.00,
+          "price": 10.0,
           "position": 2000,
           "availabilityType": "AVAILABLE_NOW",
           "sku": "I1004122",
@@ -179,7 +224,7 @@
           "name": "Pink Lemonade",
           "description": "Refreshing lemonade with a hint of berries.",
           "alcoholic": 0,
-          "price": 12.00,
+          "price": 12.0,
           "position": 3000,
           "availabilityType": "AVAILABLE_NOW",
           "sku": "I1004123",
@@ -209,7 +254,7 @@
           "name": "Nutella",
           "description": "Delicious dessert with creamy Nutella filling.",
           "alcoholic": 0,
-          "price": 18.90,
+          "price": 18.9,
           "position": 0,
           "visible": 1,
           "availabilityType": "AVAILABLE_NOW",

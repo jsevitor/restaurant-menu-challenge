@@ -1,7 +1,10 @@
 "use client";
 
+import { useCartStore } from "@/store/useCartStore";
 import { useVenueStore } from "@/store/useVenueStore";
 import { MenuItem } from "@/types/types";
+import { formatCurrency, getFinalPrice } from "@/utils/function";
+import { mapMenuItemToCartItem } from "@/utils/mapping";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
@@ -15,7 +18,12 @@ type ModalProps = {
 
 export default function Modal({ isOpen, onClose, item }: ModalProps) {
   const { venue, fetchVenue } = useVenueStore();
+  const { addItem } = useCartStore();
   const [selectedModifier, setSelectedModifier] = useState<number | null>(null);
+  const [selectedModifiers, setSelectedModifiers] = useState<
+    Record<number, number>
+  >({});
+
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -25,13 +33,7 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
 
   if (!item) return null;
 
-  const selectedOption = item.modifiers?.[0]?.items.find(
-    (modItem) => modItem.id === selectedModifier
-  );
-
-  const finalPrice = selectedOption
-    ? selectedOption.price * quantity
-    : item.price * quantity;
+  const finalPrice = getFinalPrice(item, selectedModifiers, quantity);
 
   return (
     <ReactModal
@@ -40,6 +42,7 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
         onClose();
         setQuantity(1);
         setSelectedModifier(null);
+        setSelectedModifiers({});
       }}
       overlayClassName="fixed inset-0 bg-[#0f0f0f80] flex items-center justify-center"
       className="bg-bg-secondary rounded shadow-lg w-[480px] h-5/6 max-w-lg mx-4 text-sm xl:max-h-[720px] overflow-y-auto overflow-x-hidden"
@@ -86,13 +89,18 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
                       <li key={item.id} className="flex justify-between p-4">
                         <span>
                           <h4 className="font-semibold">{item.name}</h4>
-                          <p>R${item.price}</p>
+                          <p>{formatCurrency(item.price)}</p>
                         </span>
                         <input
                           type="radio"
                           name={`modifier-${modifier.id}`}
-                          checked={selectedModifier === item.id}
-                          onChange={() => setSelectedModifier(item.id)}
+                          checked={selectedModifiers[modifier.id] === item.id}
+                          onChange={() =>
+                            setSelectedModifiers((prev) => ({
+                              ...prev,
+                              [modifier.id]: item.id,
+                            }))
+                          }
                         />
                       </li>
                     ))}
@@ -105,12 +113,11 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
         <div className=" sticky bottom-0 z-10 bg-bg-primary/40 p-4">
           <div className="flex items-center justify-center gap-4 text-xl pb-3">
             <button
-              className="w-6 h-6 rounded-full flex items-center justify-center cursor-pointer text-bg-primary"
+              className="w-7 h-7 rounded-full flex items-center justify-center cursor-pointer text-bg-primary"
               style={{ backgroundColor: venue?.webSettings.primaryColour }}
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             >
-              <i className="bi bi-minus-lg"></i>
-              <p>-</p>
+              <i className="bi bi-dash"></i>
             </button>
             <span>{quantity}</span>
             <button
@@ -124,8 +131,20 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
           <button
             className="p-3 w-full rounded-full text-bg-primary cursor-pointer font-semibold"
             style={{ backgroundColor: venue?.webSettings.primaryColour }}
+            onClick={() => {
+              const cartItem = mapMenuItemToCartItem(
+                item,
+                quantity,
+                selectedModifiers
+              );
+              addItem(cartItem);
+              onClose();
+              setQuantity(1);
+              setSelectedModifier(null);
+              setSelectedModifiers({});
+            }}
           >
-            Add to Order - R$ {finalPrice.toFixed(2)}
+            Add to Order - {formatCurrency(finalPrice)}
           </button>
         </div>
       </div>

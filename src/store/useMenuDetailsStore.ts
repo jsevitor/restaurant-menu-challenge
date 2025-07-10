@@ -59,7 +59,6 @@ export const useMenuDetailsStore = create<MenuStore>((set) => ({
   fetchMenu: async () => {
     set({ isLoading: true });
     try {
-      // Aqui você usa o JSON local diretamente
       set({ menu: localMenuData });
     } catch (err) {
       console.error("Erro ao carregar o menu local:", err);
