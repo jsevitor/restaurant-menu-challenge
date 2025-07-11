@@ -33,7 +33,7 @@ export default function Cart() {
                     With {item.modifiers[0].selectedOption.name}
                   </p>
                 )}
-                <div className="flex items-center justify-center gap-4 px-2 py-1">
+                <div className="flex items-center gap-4 px-2 py-1">
                   <button
                     className="w-5 h-5 rounded-full flex items-center justify-center cursor-pointer text-bg-primary"
                     style={{
