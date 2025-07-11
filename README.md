@@ -4,12 +4,13 @@ Este projeto é uma solução personalizada de um desafio técnico proposto pela
 
 ## Preview
 
-🚧 *Demo em construção*
-
+Acesse o projeto em: https://restaurant-menu-challenge.vercel.app/
 
 ## Screenshots
 
-*Em breve*
+<img width="1907" height="918" alt="image" src="https://github.com/user-attachments/assets/7dc1713b-2efd-469e-ac22-10d2fbe97971" />
+<img width="1920" height="914" alt="image" src="https://github.com/user-attachments/assets/c2d4e703-8567-44f1-887e-9473f64cce87" />
+<img width="1908" height="915" alt="image" src="https://github.com/user-attachments/assets/b83d1ac0-d4f3-4046-bf0a-912d308e3b97" />
 
 ## Funcionalidades
 
