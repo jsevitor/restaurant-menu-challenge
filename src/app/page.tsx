@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <>
       <Searchbar onSearch={(term) => setSearchTerm(term)} />
-      <div className="flex gap-6 lg:p-8 bg-bg-secondary lg:bg-bg-primary">
+      <div className="flex gap-6 lg:p-8 bg-bg-secondary lg:bg-bg-primary rounded-lg">
         <MenuCategories searchTerm={searchTerm} />
 
         <Cart />
