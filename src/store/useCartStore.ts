@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type CartModifierOption = {
   id: number;
@@ -38,70 +39,74 @@ function calculateTotalFromItems(items: CartItem[]) {
   }, 0);
 }
 
-export const useCartStore = create<CartStore>((set) => ({
-  items: [],
-  total: 0,
-  isLoading: false,
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      total: 0,
+      isLoading: false,
 
-  addItem: (newItem) =>
-    set((state) => {
-      const existingIndex = state.items.findIndex(
-        (item) =>
-          item.id === newItem.id &&
-          JSON.stringify(item.modifiers) === JSON.stringify(newItem.modifiers)
-      );
+      addItem: (newItem) => {
+        const existingIndex = get().items.findIndex(
+          (item) =>
+            item.id === newItem.id &&
+            JSON.stringify(item.modifiers) === JSON.stringify(newItem.modifiers)
+        );
 
-      let updatedItems;
+        let updatedItems;
 
-      if (existingIndex !== -1) {
-        updatedItems = [...state.items];
-        updatedItems[existingIndex].quantity += newItem.quantity;
-      } else {
-        updatedItems = [...state.items, newItem];
-      }
+        if (existingIndex !== -1) {
+          updatedItems = [...get().items];
+          updatedItems[existingIndex].quantity += newItem.quantity;
+        } else {
+          updatedItems = [...get().items, newItem];
+        }
 
-      return {
-        items: updatedItems,
-        total: calculateTotalFromItems(updatedItems),
-      };
-    }),
+        set({
+          items: updatedItems,
+          total: calculateTotalFromItems(updatedItems),
+        });
+      },
 
-  removeItem: (itemId) =>
-    set((state) => {
-      const updatedItems = state.items
-        .map((item) => {
-          if (item.id === itemId) {
-            if (item.quantity > 1) {
-              return { ...item, quantity: item.quantity - 1 };
+      removeItem: (itemId) => {
+        const updatedItems = get()
+          .items.map((item) => {
+            if (item.id === itemId) {
+              if (item.quantity > 1) {
+                return { ...item, quantity: item.quantity - 1 };
+              }
+              return null;
             }
-            return null;
-          }
-          return item;
-        })
-        .filter((item): item is CartItem => item !== null);
+            return item;
+          })
+          .filter((item): item is CartItem => item !== null);
 
-      return {
-        items: updatedItems,
-        total: calculateTotalFromItems(updatedItems),
-      };
+        set({
+          items: updatedItems,
+          total: calculateTotalFromItems(updatedItems),
+        });
+      },
+
+      changeQuantity: (itemId, quantity) => {
+        const updatedItems = get().items.map((item) =>
+          item.id === itemId ? { ...item, quantity } : item
+        );
+
+        set({
+          items: updatedItems,
+          total: calculateTotalFromItems(updatedItems),
+        });
+      },
+
+      clearCart: () => set({ items: [], total: 0 }),
+
+      calculateTotal: () =>
+        set((state) => ({
+          total: calculateTotalFromItems(state.items),
+        })),
     }),
-
-  changeQuantity: (itemId, quantity) =>
-    set((state) => {
-      const updatedItems = state.items.map((item) =>
-        item.id === itemId ? { ...item, quantity } : item
-      );
-
-      return {
-        items: updatedItems,
-        total: calculateTotalFromItems(updatedItems),
-      };
-    }),
-
-  clearCart: () => set({ items: [], total: 0 }),
-
-  calculateTotal: () =>
-    set((state) => ({
-      total: calculateTotalFromItems(state.items),
-    })),
-}));
+    {
+      name: "cart-storage",
+    }
+  )
+);
