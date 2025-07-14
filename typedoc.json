@@ -1,0 +1,22 @@
+{
+  "entryPoints": [
+    "src/app/api/venue/route.ts",
+    "src/app/api/menu/route.ts",
+    "src/store/useVenueStore.ts",
+    "src/store/useMenuDetailsStore.ts",
+    "src/store/useCartStore.ts",
+    "src/types",
+    "src/utils",
+    "src/app/components/cart/*.tsx",
+    "src/app/components/layout/*.tsx",
+    "src/app/components/menu/*.tsx",
+    "src/app/components/ui/*.tsx"
+  ],
+  "out": "docs",
+  "includeVersion": true,
+  "tsconfig": "tsconfig.json",
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true
+}

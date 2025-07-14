@@ -1,36 +1,57 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { useVenueStore } from "@/store/useVenueStore";
-import { MenuItem } from "@/types/types";
-import { formatCurrency, getFinalPrice } from "@/utils/function";
-import { mapMenuItemToCartItem } from "@/utils/function";
+import { ModalProps } from "@/types";
+import { formatCurrency, getFinalPrice, mapMenuItemToCartItem } from "@/utils";
+import { GeneralButton } from "../ui/Buttons";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
-import { GeneralButton } from "./Buttons";
 
-type ModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  children?: React.ReactNode;
-  item: MenuItem | null;
-};
-
-export default function Modal({ isOpen, onClose, item }: ModalProps) {
+/**
+ * ModalItem Component
+ *
+ * Exibe um item do menu em formato de *modal* full-screen (mobile),
+ * permitindo ao usuário revisar o item, alterar quantidades e adicionar
+ * ao carrinho.
+ *
+ * ▸ **Responsabilidade**
+ * - Renderizar informações do item (`useMenuDetailsStore`)
+ * - Aplicar estilos dinâmicos do restaurante (`useVenueStore`)
+ * - Bloquear/permitir rolagem do `body` enquanto o modal estiver aberto
+ * - Persistir alterações de quantidade/remover/limpar itens
+ *
+ * @param props         - Parâmetros do ModalItem.
+ * @param props.isOpen  - Controla a exibição do modal.
+ * @param props.onClose - Callback para fechar o modal.
+ * @param props.item    - Item do menu selecionado.
+ *
+ * @example
+ * ```tsx
+ * <ModalItem isOpen={isOpen} onClose={onClose} item={item} />
+ * ```
+ */
+export function ModalItem({ isOpen, onClose, item }: ModalProps) {
   const { venue, fetchVenue } = useVenueStore();
   const { addItem } = useCartStore();
+  const [quantity, setQuantity] = useState(1);
   const [selectedModifiers, setSelectedModifiers] = useState<
     Record<number, number>
   >({});
 
-  const [quantity, setQuantity] = useState(1);
-
+  /**
+   * Define o elemento principal da aplicação para acessibilidade do modal e
+   * carrega os dados do menu e do estabelecimento ao montar o componente.
+   */
   useEffect(() => {
     ReactModal.setAppElement(document.body);
     fetchVenue();
   }, [fetchVenue]);
 
+  /**
+   * Bloqueia a rolagem do `body` enquanto o modal estiver aberto.
+   */
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -43,17 +64,34 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
     };
   }, [isOpen]);
 
+  /**
+   * Limpa os estados do modal.
+   */
+  const resetState = () => {
+    setQuantity(1);
+    setSelectedModifiers({});
+  };
+
   if (!item) return null;
 
   const finalPrice = getFinalPrice(item, selectedModifiers, quantity);
+
+  /**
+   * Adiciona o item ao carrinho e fecha o modal.
+   */
+  const handleAddToCart = () => {
+    const cartItem = mapMenuItemToCartItem(item, quantity, selectedModifiers);
+    addItem(cartItem);
+    onClose();
+    resetState();
+  };
 
   return (
     <ReactModal
       isOpen={isOpen}
       onRequestClose={() => {
         onClose();
-        setQuantity(1);
-        setSelectedModifiers({});
+        resetState();
       }}
       overlayClassName="fixed inset-0 bg-[#0f0f0f80] flex items-center justify-center z-80"
       className="bg-bg-secondary lg:rounded shadow-lg w-full h-full max-w-lg mx-auto text-sm xl:max-h-[720px] overflow-hidden lg:w-[480px] lg:h-5/6 flex flex-col"
@@ -70,7 +108,7 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
               className="object-cover w-full h-full"
             />
             <button
-              className="absolute top-4 right-4 bg-bg-secondary w-6 h-6 rounded-full flex items-center justify-center cursor-pointer"
+              className="absolute top-4 right-4 bg-bg-secondary w-6 h-6 rounded-full flex items-center justify-center cursor-pointer hover:opacity-90"
               onClick={() => {
                 onClose();
                 setQuantity(1);
@@ -128,7 +166,8 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
       <div className="sticky bottom-0 z-10 bg-bg-primary/40 p-4">
         <div className="flex items-center justify-center gap-4 text-xl pb-3">
           <button
-            className="w-7 h-7 rounded-full flex items-center justify-center cursor-pointer text-bg-primary"
+            className="w-7 h-7 rounded-full flex items-center justify-center cursor-pointer text-bg-primary hover:opacity-90 disabled:opacity-50"
+            disabled={quantity === 1}
             style={{ backgroundColor: venue?.webSettings.primaryColour }}
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
           >
@@ -136,7 +175,7 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
           </button>
           <span>{quantity}</span>
           <button
-            className="w-7 h-7 rounded-full flex items-center justify-center cursor-pointer text-bg-primary"
+            className="w-7 h-7 rounded-full flex items-center justify-center cursor-pointer text-bg-primary hover:opacity-90"
             style={{ backgroundColor: venue?.webSettings.primaryColour }}
             onClick={() => setQuantity((q) => q + 1)}
           >
@@ -144,20 +183,7 @@ export default function Modal({ isOpen, onClose, item }: ModalProps) {
           </button>
         </div>
         {venue && (
-          <GeneralButton
-            action={() => {
-              const cartItem = mapMenuItemToCartItem(
-                item,
-                quantity,
-                selectedModifiers
-              );
-              addItem(cartItem);
-              onClose();
-              setQuantity(1);
-              setSelectedModifiers({});
-            }}
-            venue={venue}
-          >
+          <GeneralButton action={() => handleAddToCart()} venue={venue}>
             Add to Order - {formatCurrency(finalPrice)}
           </GeneralButton>
         )}

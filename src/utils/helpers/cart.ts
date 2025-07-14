@@ -1,17 +1,18 @@
-import { MenuItem } from "@/types/types";
-import { CartItem, CartModifier } from "@/store/useCartStore";
+import { MenuItem, CartItem, CartModifier } from "@/types";
 
-export const formatCurrency = (value: number) =>
-  value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-
+/**
+ * Calcula o preço final de um item de menu com modificadores aplicados.
+ *
+ * @param item - Item do menu
+ * @param selectedModifiers - Modificadores selecionados
+ * @param quantity - Quantidade do item
+ * @returns Preço total
+ */
 export function getFinalPrice(
   item: MenuItem,
   selectedModifiers: Record<number, number>,
   quantity: number
-) {
+): number {
   const modifiersTotal =
     item.modifiers?.reduce((acc, modifier) => {
       const selectedOptionId = selectedModifiers[modifier.id];
@@ -24,6 +25,14 @@ export function getFinalPrice(
   return (item.price + modifiersTotal) * quantity;
 }
 
+/**
+ * Mapeia um item de menu para um item de carrinho (CartItem).
+ *
+ * @param item - Item do menu
+ * @param quantity - Quantidade selecionada
+ * @param selectedModifiers - Modificadores escolhidos
+ * @returns CartItem formatado
+ */
 export function mapMenuItemToCartItem(
   item: MenuItem,
   quantity: number,

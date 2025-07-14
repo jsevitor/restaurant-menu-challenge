@@ -2,9 +2,32 @@
 
 import { useCartStore } from "@/store/useCartStore";
 import { useVenueStore } from "@/store/useVenueStore";
-import { formatCurrency } from "@/utils/function";
+import { formatCurrency } from "@/utils";
 
-export default function Cart() {
+/**
+ * Cart Component
+ *
+ * Componente responsável por exibir o conteúdo do carrinho de compras na versão desktop (visível apenas em telas `lg+`).
+ * Mostra os itens adicionados, opções selecionadas, controle de quantidade e o valor total/subtotal.
+ *
+ * ▸ **Responsabilidade**
+ * - Renderizar itens (`useCartStore`), subtotal e total
+ * - Aplicar estilos dinâmicos do restaurante (`useVenueStore`)
+ * - Integrar ao Zustand (`useCartStore`) para manipulação global do carrinho.
+ * - Formatar valores usando o utilitário `formatCurrency`.
+ * - Permite:
+ *   - Aumentar/diminuir quantidade de itens
+ *   - Remover item quando quantidade = 1
+ *   - Limpar todo o carrinho
+ *
+ * @returns {JSX.Element} Componente visual do carrinho.
+ *
+ * @example
+ * ```tsx
+ * <Cart />
+ * ```
+ */
+export function Cart() {
   const { items, total, changeQuantity, removeItem, clearCart } =
     useCartStore();
   const { venue } = useVenueStore();

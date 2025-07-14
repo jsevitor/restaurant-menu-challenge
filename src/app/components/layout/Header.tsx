@@ -1,13 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { useVenueStore } from "@/store/useVenueStore";
+import { ModalCart } from "@/app/components/cart/ModalCart";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import ModalCart from "./ModalCart";
 
-export default function Header() {
+/**
+ * Header Component
+ *
+ * Exibe o cabeçalho da aplicação, inclui navegação por abas (MENU, LOGIN,
+ * CONTACT), banner customizável, menu mobile com botão hamburguer e controle
+ * do carrinho de compras.
+ *
+ * ▸ **Responsabilidade**
+ * - Renderizar navegação, banner e botão de carrinho
+ * - Aplicar estilos dinâmicos do restaurante (`useVenueStore`)
+ * - Exibe o total de itens no ícone de carrinho
+ * - Modal do carrinho e menu lateral ativados por estado
+ *
+ * @example
+ * ```tsx
+ * <Header />
+ * ```
+ */
+export function Header() {
   const { venue, fetchVenue } = useVenueStore();
   const { items } = useCartStore();
   const [selectedTab, setSelectedTab] = useState("menu");
@@ -20,18 +38,30 @@ export default function Header() {
     { label: "CONTACT", href: "", value: "contact" },
   ];
 
+  /**
+   * Carrega os dados do estabelecimento ao montar o componente.
+   */
   useEffect(() => {
     fetchVenue();
   }, [fetchVenue]);
 
+  /**
+   * Aplica a cor de fundo vinda da API ao HEADER
+   */
   const navColor = useVenueStore(
     (s) => s.venue?.webSettings.navBackgroundColour
   );
 
+  /**
+   * Seleciona a aba ativa e o label correspondente
+   */
   const selectedTabLabel = options.find(
     (option) => option.value === selectedTab
   )?.label;
 
+  /**
+   * Calcula o total de itens no carrinho
+   */
   const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -60,7 +90,11 @@ export default function Header() {
 
       {/* Menu Mobile */}
       <div className="md:hidden flex items-center justify-between w-full px-4 py-2">
-        <span className="relative" onClick={() => setIsCartOpen(!isCartOpen)}>
+        <span
+          className="relative lg:hidden"
+          aria-label="Abrir carrinho"
+          onClick={() => setIsCartOpen(!isCartOpen)}
+        >
           <i className="bi bi-cart-fill text-xl"></i>
           {totalQuantity > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">

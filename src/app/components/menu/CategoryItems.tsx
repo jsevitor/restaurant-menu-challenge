@@ -1,98 +1,50 @@
 "use client";
 
-import { useMenuDetailsStore } from "@/store/useMenuDetailsStore";
-import { useVenueStore } from "@/store/useVenueStore";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import Modal from "./Modal";
-import { MenuItem } from "@/types/types";
+import { useState } from "react";
 import { useCartStore } from "@/store/useCartStore";
-import { formatCurrency } from "@/utils/function";
+import { MenuItem, MenuSection, Venue } from "@/types";
+import { formatCurrency } from "@/utils";
+import { ModalItem } from "./ModalItem";
+import Image from "next/image";
 
+/**
+ * Props para o componente CategoryItems
+ */
 type Props = {
+  sections: MenuSection[];
   searchTerm: string;
+  venue: Venue | null;
 };
 
-export default function MenuCategories({ searchTerm }: Props) {
-  const { venue, fetchVenue } = useVenueStore();
-  const { menu, fetchMenu } = useMenuDetailsStore();
-  const { items } = useCartStore();
-  const [selectedCategory, setSelectedCategory] = useState("Burgers");
+/**
+ * CategoryItems Component
+ *
+ * Exibe os itens de uma categoria do menu, permitindo ao usuário selecionar e adicionar ao carrinho.
+ *
+ * ▸ **Responsabilidade**
+ * - Renderizar os itens da categoria (`useMenuDetailsStore`)
+ * - Aplicar estilos dinâmicos do restaurante (`useVenueStore`)
+ * - Exibir o modal de item (`ModalItem`), se a opção de adicionar ao carrinho for ativada
+ *
+ * @param props            - Parâmetros do CategoryItems.
+ * @param props.sections   - Seções do menu.
+ * @param props.searchTerm - Termo de busca para filtrar os itens.
+ * @param props.venue      - Dados do restaurante.
+ *
+ * @example
+ * ```tsx
+ * <CategoryItems sections={sections} searchTerm={searchTerm} venue={venue} />
+ * ```
+ */
+export function CategoryItems({ sections, searchTerm, venue }: Props) {
+  const { items: cartItems } = useCartStore();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const [orderedSections, setOrderedSections] = useState(menu?.sections || []);
-
-  useEffect(() => {
-    fetchVenue();
-    fetchMenu();
-  }, [fetchVenue, fetchMenu]);
-
-  useEffect(() => {
-    if (menu?.sections) {
-      setOrderedSections(menu.sections);
-    }
-  }, [menu]);
-
-  const handleCategoryClick = (categoryName: string) => {
-    setSelectedCategory(categoryName);
-    if (!menu?.sections) return;
-
-    const newOrder = [...menu.sections];
-    const clickedSectionIndex = newOrder.findIndex(
-      (s) => s.name === categoryName
-    );
-    if (clickedSectionIndex > -1) {
-      const [clickedSection] = newOrder.splice(clickedSectionIndex, 1);
-      newOrder.unshift(clickedSection);
-      setOrderedSections(newOrder);
-    }
-  };
 
   return (
-    <div
-      className="flex flex-col px-4 lg:w-2/3 shadow-md"
-      style={{ backgroundColor: venue?.webSettings.backgroundColour }}
-    >
-      <section className="flex justify-center lg:justify-start lg:gap-4">
-        {menu?.sections.map((section) => (
-          <button
-            key={section.id}
-            className={`flex flex-col gap-8 cursor-pointer p-4 font-medium ${
-              selectedCategory === section.name ? "border-b-3" : ""
-            }`}
-            style={{ borderColor: venue?.webSettings.primaryColour }}
-            onClick={() => {
-              setSelectedCategory(section.name);
-              handleCategoryClick(section.name);
-            }}
-          >
-            <div
-              className={`relative  w-[82px] h-[82px] rounded-full ${
-                selectedCategory === section.name ? "border-2" : ""
-              }`}
-              style={{ borderColor: venue?.webSettings.primaryColour }}
-            >
-              <Image
-                src={section.images[0].image}
-                alt={section.name}
-                fill
-                className="rounded-full object-cover p-0.5"
-              />
-            </div>
-            <h3
-              className={`${
-                selectedCategory === section.name ? "font-bold" : ""
-              }`}
-            >
-              {section.name}
-            </h3>
-          </button>
-        ))}
-      </section>
-
-      {/* Itens das categorias */}
+    <>
       <section className="mt-8">
-        {orderedSections.map((section) => {
+        {sections.map((section) => {
           const filteredItems = section.items.filter((item) =>
             item.name.toLowerCase().includes(searchTerm.toLowerCase())
           );
@@ -118,7 +70,9 @@ export default function MenuCategories({ searchTerm }: Props) {
                     <div className="overflow-ellipsis w-3/4">
                       <span className="flex gap-2">
                         {(() => {
-                          const cartItem = items.find((i) => i.id === item.id);
+                          const cartItem = cartItems.find(
+                            (i) => i.id === item.id
+                          );
                           return cartItem && cartItem.quantity > 0 ? (
                             <span
                               className="px-2 text-bg-primary text-xs rounded flex items-center justify-center font-semibold"
@@ -131,14 +85,13 @@ export default function MenuCategories({ searchTerm }: Props) {
                             </span>
                           ) : null;
                         })()}
-
                         <h3 className="font-semibold">{item.name}</h3>
                       </span>
                       <p className="line-clamp-1 text-sm text-gray-700">
                         {item.description}
                       </p>
                       <p className="font-semibold">
-                        <span>{formatCurrency(item.price)} </span>
+                        {formatCurrency(item.price)}
                       </p>
                     </div>
                     {item.images && item.images.length > 0 && (
@@ -159,7 +112,8 @@ export default function MenuCategories({ searchTerm }: Props) {
           );
         })}
       </section>
-      <Modal
+
+      <ModalItem
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);
@@ -167,6 +121,6 @@ export default function MenuCategories({ searchTerm }: Props) {
         }}
         item={selectedItem}
       />
-    </div>
+    </>
   );
 }

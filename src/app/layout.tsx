@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Header from "./components/Header";
+import { Header } from "./components/layout/Header";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 
@@ -9,11 +9,32 @@ const roboto = Roboto({
   display: "swap",
 });
 
+/**
+ * Metadados da aplicação
+ */
 export const metadata: Metadata = {
   title: "Restaurant Menu Challenge",
   description: "Desafio técnico para criação de menu de restaurante",
 };
 
+/**
+ * RootLayout Component
+ *
+ * Layout principal da aplicação, onde se encontra o cabeçalho e o corpo da aplicação.
+ *
+ * ▸ **Responsabilidade**
+ * - Renderizar o cabeçalho e o corpo da aplicação
+ *
+ * @component
+ * @param {React.ReactNode} children - Conteúdo filho do layout.
+ *
+ * @example
+ * ```tsx
+ * <RootLayout>
+ *    Conteúdo do layout
+ * </RootLayout>
+ * ```
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

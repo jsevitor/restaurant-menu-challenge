@@ -1,44 +1,22 @@
+import { CartItem, CartStore } from "@/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type CartModifierOption = {
-  id: number;
-  name: string;
-  price: number;
-};
-
-export type CartModifier = {
-  id: number;
-  name: string;
-  selectedOption: CartModifierOption;
-};
-
-export type CartItem = {
-  id: number;
-  name: string;
-  basePrice: number;
-  quantity: number;
-  image?: string;
-  modifiers?: CartModifier[];
-};
-
-export type CartStore = {
-  items: CartItem[];
-  total: number;
-  isLoading: boolean;
-  addItem: (item: CartItem) => void;
-  removeItem: (id: number) => void;
-  changeQuantity: (id: number, quantity: number) => void;
-  clearCart: () => void;
-  calculateTotal: () => void;
-};
-
+/**
+ * Calcula o total baseado nos itens do carrinho.
+ *
+ * @param {CartItem[]} items - Itens do carrinho.
+ * @returns {*} - Total baseado nos itens do carrinho.
+ */
 function calculateTotalFromItems(items: CartItem[]) {
   return items.reduce((acc, item) => {
     return acc + item.basePrice * item.quantity;
   }, 0);
 }
 
+/**
+ * Hook para manipular o carrinho de compras.
+ */
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
@@ -46,6 +24,9 @@ export const useCartStore = create<CartStore>()(
       total: 0,
       isLoading: false,
 
+      /**
+       * Adiciona um novo item ao carrinho. Se já existir um item com os mesmos modificadores, soma a quantidade.
+       */
       addItem: (newItem) => {
         const existingIndex = get().items.findIndex(
           (item) =>
@@ -68,6 +49,9 @@ export const useCartStore = create<CartStore>()(
         });
       },
 
+      /**
+       * Remove um item do carrinho.
+       */
       removeItem: (itemId) => {
         const updatedItems = get()
           .items.map((item) => {
@@ -87,6 +71,9 @@ export const useCartStore = create<CartStore>()(
         });
       },
 
+      /**
+       * Altera a quantidade de um item do carrinho.
+       */
       changeQuantity: (itemId, quantity) => {
         const updatedItems = get().items.map((item) =>
           item.id === itemId ? { ...item, quantity } : item
@@ -98,8 +85,14 @@ export const useCartStore = create<CartStore>()(
         });
       },
 
+      /**
+       * Limpa o carrinho de compras.
+       */
       clearCart: () => set({ items: [], total: 0 }),
 
+      /**
+       * Calcula o total baseado nos itens do carrinho.
+       */
       calculateTotal: () =>
         set((state) => ({
           total: calculateTotalFromItems(state.items),

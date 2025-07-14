@@ -1,15 +1,17 @@
-import { Venue } from "@/types/types";
+import { VenueStore } from "@/types";
 import { create } from "zustand";
 
-type VenueStore = {
-  venue: Venue | null;
-  isLoading: boolean;
-  fetchVenue: () => Promise<void>;
-};
-
+/**
+ * Hook para fazer o fetch dos dados de customização da aplicação via API.
+ */
 export const useVenueStore = create<VenueStore>((set) => ({
   venue: null,
   isLoading: false,
+
+  /**
+   * Faz o fetch dos dados de customização do restaurante (venue) a partir de uma API.
+   * Atualiza o estado global com os dados do venue ou registra um erro em caso de falha.
+   */
   fetchVenue: async () => {
     set({ isLoading: true });
     try {

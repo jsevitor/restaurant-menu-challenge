@@ -1,19 +1,38 @@
 "use client";
 
+import { useEffect } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { useVenueStore } from "@/store/useVenueStore";
-import { formatCurrency } from "@/utils/function";
-import { useEffect } from "react";
+import { formatCurrency } from "@/utils";
+import { GeneralButton } from "@/app/components/ui/Buttons";
+import { ModalProps } from "@/types";
 import ReactModal from "react-modal";
-import { GeneralButton } from "./Buttons";
 
-type ModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  children?: React.ReactNode;
-};
-
-export default function ModalCart({ isOpen, onClose }: ModalProps) {
+/**
+ * ModalCart Component
+ *
+ * Exibe o carrinho de compras em formato de *modal* full‑screen (mobile),
+ * permitindo ao usuário revisar itens, alterar quantidades, remover produtos
+ * ou limpar todo o carrinho. Também mostra subtotal, total e um botão de
+ * checkout.
+ *
+ * ▸ **Responsabilidade**
+ * - Renderizar lista de itens (`useCartStore`)
+ * - Aplicar estilos dinâmicos do restaurante (`useVenueStore`)
+ * - Bloquear/permitir rolagem do `body` enquanto o modal estiver aberto
+ * - Persistir alterações de quantidade/remover/limpar itens
+ *
+ * @param props          - Parâmetros do ModalCart.
+ * @param props.isOpen   - Controla a exibição do modal.
+ * @param props.onClose  - Callback para fechar o modal.
+ * @param props.children - Conteúdo extra opcional.
+ *
+ * @example
+ * ```tsx
+ * <ModalCart isOpen={open} onClose={() => setOpen(false)} />
+ * ```
+ */
+export function ModalCart({ isOpen, onClose }: ModalProps) {
   const { venue, fetchVenue } = useVenueStore();
   const { items, total, removeItem, changeQuantity, clearCart } =
     useCartStore();

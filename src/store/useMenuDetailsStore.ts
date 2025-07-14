@@ -1,16 +1,19 @@
 import { create } from "zustand";
-import { Menu } from "@/types/types";
+import { Menu, MenuStore } from "@/types";
 import localMenuData from "@/data/data.json";
 
-type MenuStore = {
-  menu: Menu | null;
-  isLoading: boolean;
-  fetchMenu: () => Promise<void>;
-};
-
+/**
+ * Hook para fazer o fetch dos dados do menu do restaurante.
+ */
 export const useMenuDetailsStore = create<MenuStore>((set) => ({
   menu: null,
   isLoading: false,
+
+  /**
+   * Faz o fetch do menu do restaurante.
+   * O menu do restaurante virá de uma API, por hora os dados do menu serão carregados de um arquivo local.
+   * Atualiza o estado global com os dados do menu ou registra um erro em caso de falha.
+   */
   fetchMenu: async () => {
     set({ isLoading: true });
     try {
