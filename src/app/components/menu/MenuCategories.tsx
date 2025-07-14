@@ -41,6 +41,15 @@ export function MenuCategories({ searchTerm }: MenuCategoriesProps) {
     fetchMenu();
   }, [fetchVenue, fetchMenu]);
 
+  /**
+   * Atualiza a ordem das categorias ao mudar o menu.
+   */
+  useEffect(() => {
+    if (menu?.sections) {
+      setOrderedSections(menu.sections);
+    }
+  }, [menu]);
+
   return (
     <div
       className="flex flex-col px-4 lg:w-2/3 shadow-md"
