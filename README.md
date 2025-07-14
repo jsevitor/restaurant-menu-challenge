@@ -1,6 +1,12 @@
 # QikServe Frontend Challenge - Restaurante Burgers
 
-Este projeto é uma solução personalizada de um desafio técnico proposto pela [QikServe](https://github.com/qsengineers/frontend-challenge?tab=readme-ov-file), encontrado em uma oportunidade de emprego. A proposta consistia em desenvolver uma aplicação em React (Next.js) para visualização de cardápio e gerenciamento de carrinho de compras de um restaurante. Durante o desenvolvimento, foram aplicadas melhorias e personalizações além do escopo original, com o objetivo de entregar uma solução mais refinada, com melhor experiência de uso, responsividade e fidelidade ao conceito de personalização por restaurante (cores, imagens, layout e comportamento dinâmico definidos pela API).
+Este projeto é uma solução para o desafio técnico proposto pela [QikServe](https://github.com/qsengineers/frontend-challenge?tab=readme-ov-file), com o objetivo de criar uma aplicação de visualização de cardápio e gerenciamento de pedidos para um restaurante fictício.
+
+O foco do desafio era simular uma experiência de pedidos online realista e personalizável — adaptável a diferentes restaurantes a partir de uma API pública.
+
+Durante o desenvolvimento, fui além do escopo inicial para entregar uma experiência mais fluida, modular e responsiva. Aproveitei ferramentas como React (Next.js), Zustand, Tailwind CSS e uma API dinâmica para construir uma interface baseada em dados, com personalização visual, navegação mobile-friendly e gerenciamento de estado leve.
+
+Foi uma ótima oportunidade para aplicar boas práticas de arquitetura frontend e reforçar meu domínio sobre temas como componentes reativos, design baseado em dados e performance em aplicações modernas.
 
 ## Preview
 
@@ -23,18 +29,29 @@ Acesse o projeto em: https://restaurant-menu-challenge.vercel.app/
 - Busca em tempo real de itens do menu
 - Menu mobile com navegação entre seções e carrinho
 
-## 🧩 Tecnologias e Ferramentas
+## Tecnologias e Ferramentas
 
-| Stack | Descrição |
-|-------|-----------|
-| **Next.js** | Framework React usado para SSR e estrutura de pastas |
-| **React 19** | Biblioteca base para componentes da UI |
-| **Zustand** | Gerenciamento de estado simples e eficiente (carrinho e dados de restaurante/menu) |
-| **TypeScript** | Tipagem estática para maior robustez e autocompletar |
-| **Tailwind CSS** | Estilização rápida e responsiva |
-| **React Modal** | Componente de modal acessível para detalhes e carrinho |
-| **Bootstrap Icons** | Ícones utilizados na UI |
-| **ESLint** | Linter para manter código limpo e padronizado |
+| Stack               | Descrição                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| **Next.js**         | Framework React usado para SSR e estrutura de pastas                               |
+| **React 19**        | Biblioteca base para componentes da UI                                             |
+| **Zustand**         | Gerenciamento de estado simples e eficiente (carrinho e dados de restaurante/menu) |
+| **TypeScript**      | Tipagem estática para maior robustez e autocompletar                               |
+| **Tailwind CSS**    | Estilização rápida e responsiva                                                    |
+| **React Modal**     | Componente de modal acessível para detalhes e carrinho                             |
+| **Bootstrap Icons** | Ícones utilizados na UI                                                            |
+| **ESLint**          | Linter para manter código limpo e padronizado                                      |
+
+## Aprendizados
+
+Durante esse projeto, aprofundei meu conhecimento em:
+
+- Gerenciamento de estado com **Zustand**, garantindo simplicidade e performance.
+- Criação de temas dinâmicos com **Tailwind CSS** usando dados externos.
+- Arquitetura de componentes reutilizáveis e acessíveis com **React Modal**.
+- Otimização de UX mobile-first e implementação de busca em tempo real.
+- Consumo de APIs REST com tipagem robusta via TypeScript.
+- Geração automatizada de documentação técnica com Typedoc.
 
 ## Instalação
 
@@ -50,23 +67,32 @@ Acesse o projeto em: https://restaurant-menu-challenge.vercel.app/
   ```bash
   npm run dev
   ```
-  
+
+## Documentação
+
+A documentação completa do projeto foi gerada com [TypeDoc](https://typedoc.org/) e está disponível em:
+
+🔗 [Documentação Técnica (GitHub Pages)](https://jsevitor.github.io/restaurant-menu-challenge/)
+
+Ela inclui descrições de tipos, estruturas, funções e lógica central do projeto — útil para entendimento rápido da base de código.
+
 ## Endpoints da API
+
 - Restaurante (configurações do tema, nome, etc):
   [https://cdn-dev.preoday.com/challenge/venue/9](https://cdn-dev.preoday.com/challenge/venue/9)
 
 - Cardápio completo:
-[https://cdn-dev.preoday.com/challenge/menu](https://cdn-dev.preoday.com/challenge/menu)
+  [https://cdn-dev.preoday.com/challenge/menu](https://cdn-dev.preoday.com/challenge/menu)
 
 ## Customização por restaurante
 
 A UI se adapta automaticamente com base nas propriedades retornadas pela API:
 
-| Propriedade |	Utilização |
-|-------|-----------|
-| venue.webSettings.bannerImage |	Banner superior
-| venue.webSettings.navBackgroundColour |	Cor do header
-| venue.webSettings.primaryColour |	Cor dos botões
+| Propriedade                           | Utilização      |
+| ------------------------------------- | --------------- |
+| venue.webSettings.bannerImage         | Banner superior |
+| venue.webSettings.navBackgroundColour | Cor do header   |
+| venue.webSettings.primaryColour       | Cor dos botões  |
 
 ## Possibilidades de melhoria
 
@@ -91,4 +117,5 @@ Caso queira entrar em contato, me encontre em:
 - E-mail: [vitorjseo@gmail.com](mailto:vitorjseo@gmail.com)
 
 ---
+
 Desenvolvido por **Vitor Oliveira**.
